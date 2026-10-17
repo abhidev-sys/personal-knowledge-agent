@@ -1,0 +1,14 @@
+fastapi<1.0,>=0.110
+uvicorn[standard]<1.0,>=0.29
+pydantic<3.0,>=2.6
+pydantic-settings<3.0,>=2.2
+sqlalchemy<3.0,>=2.0
+alembic<2.0,>=1.13
+psycopg[binary]<4.0,>=3.1
+pgvector<1.0,>=0.2.5
+
+[dev]
+pytest<9,>=8
+httpx<1.0,>=0.27
+ruff<1.0,>=0.4
+mypy<2.0,>=1.9
