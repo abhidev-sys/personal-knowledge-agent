@@ -4,9 +4,7 @@ Nothing here executes imported content: HTML is only parsed as a tree, never ren
 """
 import re
 from urllib.parse import urljoin, urlsplit
-
 from bs4 import BeautifulSoup, NavigableString, Tag
-
 from app.core.exceptions import IngestionError
 from app.ingestion.types import ParsedDocument, Section
 
