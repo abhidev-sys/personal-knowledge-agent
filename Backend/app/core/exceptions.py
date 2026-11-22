@@ -34,6 +34,40 @@ class ProviderUnavailableError(AppError):
     code = "provider_unavailable"
 
 
+class InvalidInputError(AppError):
+    status_code = 422
+    code = "invalid_input"
+
+
+class ConflictError(AppError):
+    status_code = 409
+    code = "conflict"
+
+
+class PayloadTooLargeError(AppError):
+    status_code = 413
+    code = "payload_too_large"
+
+
+class IngestionError(AppError):
+    """The input cannot be ingested and retrying will not help (bad file, blocked URL...)."""
+
+    status_code = 422
+    code = "ingestion_failed"
+
+
+class UnsafeUrlError(IngestionError):
+    status_code = 400
+    code = "unsafe_url"
+
+
+class TransientIngestionError(AppError):
+    """A temporary failure (network, timeout, 5xx). The job queue may retry it."""
+
+    status_code = 503
+    code = "ingestion_temporarily_failed"
+
+
 def _body(code: str, message: str) -> dict[str, dict[str, str]]:
     return {"error": {"code": code, "message": message, "request_id": request_id_var.get()}}
 

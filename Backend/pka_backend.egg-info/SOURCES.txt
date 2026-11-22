@@ -17,11 +17,16 @@ app/db/session.py
 app/db/types.py
 app/db/models/__init__.py
 app/db/models/chunk.py
+app/db/models/conversation.py
 app/db/models/job.py
+app/db/models/knowledge.py
+app/db/models/memory.py
 app/db/models/source.py
 app/db/models/tag.py
 app/db/models/user.py
 app/db/models/user_settings.py
+app/ingestion/__init__.py
+app/providers/__init__.py
 pka_backend.egg-info/PKG-INFO
 pka_backend.egg-info/SOURCES.txt
 pka_backend.egg-info/dependency_links.txt
@@ -32,3 +37,4 @@ tests/test_errors.py
 tests/test_health.py
 tests/test_migrations_postgres.py
 tests/test_models_core.py
+tests/test_models_memory_graph.py
