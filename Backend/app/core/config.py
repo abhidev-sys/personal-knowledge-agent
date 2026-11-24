@@ -34,6 +34,17 @@ class Settings(BaseSettings):
     fetch_max_bytes: int = Field(default=5 * 1024 * 1024, ge=1024)
     fetch_max_redirects: int = Field(default=5, ge=0, le=10)
 
+    # ---- background jobs (Phase 5B) -------------------------------------------------
+    job_max_attempts: int = Field(default=3, ge=1, le=10)
+    job_retry_base_seconds: float = Field(default=30.0, ge=0, le=3600)
+    job_lock_timeout_seconds: float = Field(default=900.0, ge=10)
+    job_poll_interval_seconds: float = Field(default=2.0, gt=0, le=60)
+
+    # ---- temporary stand-ins (replaced by real auth in Phase 8, real providers in Phase 16)
+    dev_auth_enabled: bool = False  # lets every request act as one local user
+    dev_user_email: str = "local@example.com"
+    embedding_backend: Literal["none", "test-hashing"] = "none"
+
     @model_validator(mode="after")
     def _validate_rules(self) -> "Settings":
         if self.chunk_overlap_chars >= self.chunk_size_chars:
@@ -43,6 +54,10 @@ class Settings(BaseSettings):
                 raise ValueError("PKA_ALLOWED_ORIGINS must not contain '*' in production")
             if self.database_url.startswith("sqlite"):
                 raise ValueError("SQLite is not allowed in production; use PostgreSQL")
+            if self.dev_auth_enabled:
+                raise ValueError("PKA_DEV_AUTH_ENABLED must be false in production")
+            if self.embedding_backend == "test-hashing":
+                raise ValueError("The test embedder must not be used in production")
         return self
 
 

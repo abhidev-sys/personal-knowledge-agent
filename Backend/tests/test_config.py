@@ -29,3 +29,25 @@ def test_chunk_overlap_must_be_smaller_than_chunk_size():
             chunk_size_chars=200,
             chunk_overlap_chars=200,
         )
+
+
+def test_production_rejects_dev_auth():
+    with pytest.raises(ValidationError):
+        Settings(
+            environment="production",
+            database_url="postgresql+psycopg://u:p@h/db",
+            secret_key="x" * 40,
+            allowed_origins=["https://app.example.com"],
+            dev_auth_enabled=True,
+        )
+
+
+def test_production_rejects_the_test_embedder():
+    with pytest.raises(ValidationError):
+        Settings(
+            environment="production",
+            database_url="postgresql+psycopg://u:p@h/db",
+            secret_key="x" * 40,
+            allowed_origins=["https://app.example.com"],
+            embedding_backend="test-hashing",
+        )

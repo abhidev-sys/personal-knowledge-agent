@@ -24,6 +24,11 @@ class NotFoundError(AppError):
     code = "not_found"
 
 
+class AuthenticationRequiredError(AppError):
+    status_code = 401
+    code = "authentication_required"
+
+
 class PermissionDeniedError(AppError):
     status_code = 403
     code = "forbidden"
