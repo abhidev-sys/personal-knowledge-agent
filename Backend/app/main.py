@@ -4,12 +4,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import health
+from app.api.routes import health, sources
 from app.core.config import Settings, get_settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging
 from app.core.middleware import RequestContextMiddleware
 from app.db.session import build_engine, build_sessionmaker
+from app.ingestion.storage import FileStorage
+from app.services.factory import build_embedder
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -22,6 +24,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.engine = engine
         app.state.session_factory = build_sessionmaker(engine)
         app.state.settings = settings
+        app.state.storage = FileStorage(settings.upload_dir)
+        app.state.embedder = build_embedder(settings)
         yield
         engine.dispose()
 
@@ -37,6 +41,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(RequestContextMiddleware)
     register_exception_handlers(app)
     app.include_router(health.router)
+    app.include_router(sources.router)
     return app
 
 
